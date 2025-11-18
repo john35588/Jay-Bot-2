@@ -3,6 +3,3 @@ services:
     build: .
     container_name: jaybot
     restart: unless-stopped
-    volumes:
-      - ./config:/app/config
-      - ./persona:/app/persona
