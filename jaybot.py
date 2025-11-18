@@ -40,6 +40,8 @@ async def on_message(message):
 
     prompt = create_prompt(history)
 
+    print(f"Prompt: {prompt}")
+
     async with message.channel.typing():   # <── typing indicator
         reply = await ask_llm(prompt)
 
