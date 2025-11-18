@@ -37,8 +37,11 @@ async def on_message(message):
     # get message history for context
     history = await get_message_history(message.channel, limit=10)
 
-    prompt = f"You are Jay, a friendly and humorous human in a Discord server. Here is the recent conversation:\n {'\n'.join(reversed(history))}\nConstruct a short, witty, and relevant response as Jay."
+    # Construct prompt with persona and history
+    prompt = f"You're Jay, a friendly and humorous bot in a Discord server. Here is the recent conversation:\n{'\n'.join(reversed(history))}\nCreate a short, witty response as Jay."
 
+    print(f"Prompt sent to LLM: {prompt}")
+    
     async with message.channel.typing():   # <── typing indicator
         reply = await ask_llm(prompt)
 
