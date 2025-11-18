@@ -54,13 +54,13 @@ async def on_message(message):
         print(reply)
         return
     elif "$THUMBS_UP" in reply:
-        print(f"Reacting to \"{message.content}\" with 👍")
+        print("Reacted with 👍")
         await message.add_reaction("👍")
     elif "$THUMBS_DOWN" in reply:
-        print(f"Reacting to \"{message.content}\" with 👎")
+        print("Reacted with 👎")
         await message.add_reaction("👎")
     else:
-        print(f"Responding to \"{message.content}\" with: {reply}")
+        print(f"Responded with: {reply}")
         await message.channel.send(reply)
 
 # Load last 10 messages for context
