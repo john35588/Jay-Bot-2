@@ -7,12 +7,24 @@ on:
     branches: [ "main" ]
 
 jobs:
-
-  build:
-
+  build-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build the Docker image
+        run: |
+          IMAGE="ghcr.io/${{ github.repository_owner }}/jaybot:latest"
+          docker build -t $IMAGE .
+
+      - name: Push the Docker image
+        run: |
+          IMAGE="ghcr.io/${{ github.repository_owner }}/jaybot:latest"
+          docker push $IMAGE
