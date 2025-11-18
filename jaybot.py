@@ -35,7 +35,7 @@ async def on_message(message):
     if message.author.bot:
         return
     
-    print(f"Received message from {message.author}: {message.content}")
+    print(f"Received message from {message.author.display_name}: {message.content}")
 
     # get message history for context
     history = await get_message_history(message.channel, limit=10)
@@ -67,7 +67,7 @@ async def on_message(message):
 async def get_message_history(channel, limit=10):
     messages = []
     async for msg in channel.history(limit=limit):
-        messages.append(f"{msg.author.name}: {msg.content}")
+        messages.append(f"{msg.author.display_name}: {msg.content}")
     messages.reverse()  # Oldest first
     return '/n'.join(messages)
 
