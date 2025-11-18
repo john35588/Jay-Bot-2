@@ -53,6 +53,8 @@ async def get_message_history(channel, limit=10):
     messages = []
     async for msg in channel.history(limit=limit):
         messages.append(f"{msg.author.name}: {msg.content}")
+    messages.reverse()  # Oldest first
+    return messages
 
 # Start the bot
 client.run(os.getenv("DISCORD_TOKEN"))
