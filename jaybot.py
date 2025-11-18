@@ -40,15 +40,15 @@ async def on_message(message):
 
     prompt = create_prompt(history)
 
-    print(f"Prompt: {prompt}")
-
     async with message.channel.typing():   # <── typing indicator
         reply = await ask_llm(prompt)
 
     # If the reply contains "$NO_COMMENT", do not respond
     if "$NO_COMMENT" in reply:
+        print(reply)
         return
     else:
+        print("Responding to this message with:", reply)
         await message.channel.send(reply)
 
 # Load last 10 messages for context
