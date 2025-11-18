@@ -38,10 +38,7 @@ async def on_message(message):
     # get message history for context
     history = await get_message_history(message.channel, limit=10)
 
-    # Construct prompt with persona and history
-    prompt = f"You're Jay, a friendly and humorous bot in a Discord server. Here is the recent conversation:\n{NEWLINE.join(history)}\nCreate a short, witty response as Jay."
-
-    print(f"Prompt sent to LLM: {prompt}")
+    prompt = create_prompt(history)
 
     async with message.channel.typing():   # <── typing indicator
         reply = await ask_llm(prompt)
@@ -54,7 +51,14 @@ async def get_message_history(channel, limit=10):
     async for msg in channel.history(limit=limit):
         messages.append(f"{msg.author.name}: {msg.content}")
     messages.reverse()  # Oldest first
-    return messages
+    return '/n'.join(messages)
+
+# Create a good prompt for the LLM
+def create_prompt(history):
+    with open("persona/jay-persona.txt", "r") as F:
+        persona = F.read()
+    prompt = f"{persona}\n\nRecent conversation:\n{history}\n\nJay's response:"
+    return prompt
 
 # Start the bot
 client.run(os.getenv("DISCORD_TOKEN"))
