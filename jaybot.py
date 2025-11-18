@@ -8,7 +8,7 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 OLLAMA_URL = "http://192.168.86.2:30068/api/generate"
-MODEL = "qwen2.5:3b"   # change later if you want
+MODEL = "llama3.2:latest"   # change later if you want
 
 async def ask_llm(prompt: str):
     payload = {
