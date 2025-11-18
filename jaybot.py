@@ -7,7 +7,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 
-OLLAMA_URL = "http://192.168.86.2:30068/api/generate"
+OLLAMA_URL = os.getenv("OLLAMA_URL")
 MODEL = "llama3.2:latest"
 NEWLINE = "\n"
 
@@ -45,7 +45,11 @@ async def on_message(message):
     async with message.channel.typing():   # <── typing indicator
         reply = await ask_llm(prompt)
 
-    await message.channel.send(reply)
+    # If the reply contains "$NO_COMMENT", do not respond
+    if "$NO_COMMENT" in reply:
+        return
+    else:
+        await message.channel.send(reply)
 
 # Load last 10 messages for context
 async def get_message_history(channel, limit=10):
