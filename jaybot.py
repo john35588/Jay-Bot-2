@@ -35,12 +35,18 @@ async def on_message(message):
     if message.author.bot:
         return
     
+    print(f"Received message from {message.author}: {message.content}")
+
     # get message history for context
     history = await get_message_history(message.channel, limit=10)
 
     prompt = create_prompt(history)
 
-    async with message.channel.typing():   # <── typing indicator
+    # Only send the typing indicator if the bot is mentioned, otherwise just respond
+    if "jay" in message.content.lower():
+        async with message.channel.typing():   # <── typing indicator
+            reply = await ask_llm(prompt)
+    else:
         reply = await ask_llm(prompt)
 
     # Handle special commands
