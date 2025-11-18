@@ -43,18 +43,18 @@ async def on_message(message):
     async with message.channel.typing():   # <── typing indicator
         reply = await ask_llm(prompt)
 
-    # If the reply contains "$NO_COMMENT", do not respond
+    # Handle special commands
     if "$NO_COMMENT" in reply:
         print(reply)
         return
     elif "$THUMBS_UP" in reply:
-        print("Reacting to this message with a thumbs up")
+        print(f"Reacting to \"{message.content}\" with 👍")
         await message.add_reaction("👍")
     elif "$THUMBS_DOWN" in reply:
-        print("Reacting to this message with a thumbs down")
+        print(f"Reacting to \"{message.content}\" with 👎")
         await message.add_reaction("👎")
     else:
-        print(f"Responding to {message.content} with: {reply}")
+        print(f"Responding to \"{message.content}\" with: {reply}")
         await message.channel.send(reply)
 
 # Load last 10 messages for context
