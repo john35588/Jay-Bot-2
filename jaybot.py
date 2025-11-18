@@ -9,7 +9,7 @@ client = discord.Client(intents=intents)
 
 OLLAMA_URL = os.getenv("OLLAMA_URL")
 MODEL = "llama3.2:latest"
-PERSONA_FILE = "persona/test-persona.txt"
+PERSONA_PATH = "persona/test-persona.txt"
 
 # Function to interact with the LLM
 async def ask_llm(prompt: str):
@@ -28,6 +28,7 @@ async def ask_llm(prompt: str):
 @client.event
 async def on_ready():
     print(f"Logged in as {client.user}")
+    print(f"Using Model: {MODEL} and Persona: {PERSONA_PATH}")
 
 # Respond to messages
 @client.event
@@ -73,7 +74,7 @@ async def get_message_history(channel, limit=10):
 
 # Create a good prompt for the LLM
 def create_prompt(history):
-    with open(PERSONA_FILE, "r") as F:
+    with open(PERSONA_PATH, "r") as F:
         persona = F.read()
     prompt = f"{persona}\n{history}\n"
     return prompt
