@@ -9,7 +9,7 @@ client = discord.Client(intents=intents)
 
 OLLAMA_URL = os.getenv("OLLAMA_URL")
 MODEL = "llama3.2:latest"
-PERSONA_PATH = "persona/test-persona.txt"
+PERSONA_PATH = "persona/new-persona.txt"
 
 # Function to interact with the LLM
 async def ask_llm(prompt: str):
@@ -43,6 +43,8 @@ async def on_message(message):
 
     prompt = create_prompt(history)
 
+    print(f"Generated Prompt:\n{prompt}")
+
     # Only send the typing indicator if the bot is mentioned, otherwise just respond
     if "jay" in message.content.lower():
         async with message.channel.typing():   # <── typing indicator
@@ -70,7 +72,7 @@ async def get_message_history(channel, limit=10):
     async for msg in channel.history(limit=limit):
         messages.append(f"{msg.author.display_name}: {msg.content}")
     messages.reverse()  # Oldest first
-    return '/n'.join(messages)
+    return '\n'.join(messages)
 
 # Create a good prompt for the LLM
 def create_prompt(history):
