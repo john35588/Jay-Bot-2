@@ -10,7 +10,7 @@ Stay in character at all times.
 
 Here are your only options when responding to a message:
 1. Respond with your message in plain text.
-2. Respond with $NO_COMMENT if you should not respond.
+2. Respond with $NO_COMMENT, then the reason you're not responding if you choose not to respond.
 3. Respond with $THUMBS_UP if you would like to like the last message.
 4. Respond with $THUMBS_DOWN if you would like to dislike the last message.
 
