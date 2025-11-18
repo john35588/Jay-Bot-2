@@ -39,7 +39,7 @@ async def on_message(message):
     history = await get_message_history(message.channel, limit=10)
 
     # Construct prompt with persona and history
-    prompt = f"You're Jay, a friendly and humorous bot in a Discord server. Here is the recent conversation:\n{NEWLINE.join(reversed(history))}\nCreate a short, witty response as Jay."
+    prompt = f"You're Jay, a friendly and humorous bot in a Discord server. Here is the recent conversation:\n{NEWLINE.join(history)}\nCreate a short, witty response as Jay."
 
     print(f"Prompt sent to LLM: {prompt}")
 

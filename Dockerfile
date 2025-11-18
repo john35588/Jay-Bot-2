@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["python", "jaybot.py"]
+CMD ["python", "-u", "jaybot.py"]
