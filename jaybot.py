@@ -59,7 +59,7 @@ async def get_message_history(channel, limit=10):
 def create_prompt(history):
     with open("persona/jay-persona.txt", "r") as F:
         persona = F.read()
-    prompt = f"{persona}\n\nRecent conversation:\n{history}\n\nJay's response:"
+    prompt = f"{persona}\n{history}\n"
     return prompt
 
 # Start the bot
