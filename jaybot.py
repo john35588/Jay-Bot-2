@@ -54,7 +54,7 @@ async def on_message(message):
         print("Reacting to this message with a thumbs down")
         await message.add_reaction("👎")
     else:
-        print("Responding to this message with:", reply)
+        print(f"Responding to {message.content} with: {reply}")
         await message.channel.send(reply)
 
 # Load last 10 messages for context
