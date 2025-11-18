@@ -47,6 +47,12 @@ async def on_message(message):
     if "$NO_COMMENT" in reply:
         print(reply)
         return
+    elif "$THUMBS_UP" in reply:
+        print("Reacting to this message with a thumbs up")
+        await message.add_reaction("👍")
+    elif "$THUMBS_DOWN" in reply:
+        print("Reacting to this message with a thumbs down")
+        await message.add_reaction("👎")
     else:
         print("Responding to this message with:", reply)
         await message.channel.send(reply)
