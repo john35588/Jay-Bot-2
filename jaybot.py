@@ -9,6 +9,7 @@ client = discord.Client(intents=intents)
 
 OLLAMA_URL = "http://192.168.86.2:30068/api/generate"
 MODEL = "llama3.2:latest"
+NEWLINE = "\n"
 
 # Function to interact with the LLM
 async def ask_llm(prompt: str):
@@ -38,10 +39,10 @@ async def on_message(message):
     history = await get_message_history(message.channel, limit=10)
 
     # Construct prompt with persona and history
-    prompt = f"You're Jay, a friendly and humorous bot in a Discord server. Here is the recent conversation:\n{'\n'.join(reversed(history))}\nCreate a short, witty response as Jay."
+    prompt = f"You're Jay, a friendly and humorous bot in a Discord server. Here is the recent conversation:\n{NEWLINE.join(reversed(history))}\nCreate a short, witty response as Jay."
 
     print(f"Prompt sent to LLM: {prompt}")
-    
+
     async with message.channel.typing():   # <── typing indicator
         reply = await ask_llm(prompt)
 
