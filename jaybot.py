@@ -7,7 +7,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 
-OLLAMA_URL = "http://host.docker.internal:11434/api/generate"
+OLLAMA_URL = "http://host.docker.internal:30068/api/generate"
 MODEL = "qwen2.5:3b"   # change later if you want
 
 async def ask_llm(prompt: str):
