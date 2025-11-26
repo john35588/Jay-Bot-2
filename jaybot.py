@@ -33,7 +33,7 @@ async def on_ready():
 # Respond to messages
 @client.event
 async def on_message(message):
-    if message.author.bot:
+    if message.author == "Jay":
         return
     
     print(f"Received message from {message.author.display_name}: {message.content}")
