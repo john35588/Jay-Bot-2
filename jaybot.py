@@ -70,11 +70,15 @@ async def on_message(message):
 async def get_message_history(channel, limit=10):
     messages = []
     async for msg in channel.history(limit=limit):
-        messages.append(f"{msg.author.display_name}: {msg.content}")
+        if msg.embeds:
+            for embed in msg.embeds:
+                messages.append(f"{msg.author.display_name}: {embed.author.name}")
+        else:
+            messages.append(f"{msg.author.display_name}: {msg.content}")
     messages.reverse()  # Oldest first
     return '\n'.join(messages)
 
-# Create a good prompt for the LLM
+# Create the prompt for the LLM
 def create_prompt(history):
     with open(PERSONA_PATH, "r") as F:
         persona = F.read()
