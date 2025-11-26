@@ -53,7 +53,7 @@ async def on_message(message):
         reply = await ask_llm(prompt)
 
     # Handle special commands
-    if "$NO_COMMENT" in reply:
+    if "$NO_COMMENT" in reply or "NO_COMMENT" in reply:
         print(reply)
         return
     elif "$THUMBS_UP" in reply:
