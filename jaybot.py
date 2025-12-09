@@ -9,7 +9,9 @@ client = discord.Client(intents=intents)
 
 OLLAMA_URL = os.getenv("OLLAMA_URL")
 MODEL = "llama3.2:latest"
-PERSONA_PATH = "persona/new-persona.txt"
+GENERAL_PERSONA_PATH = "persona/new-persona.txt"
+MINECRAFT_PERSONA_PATH = "persona/minecraft-persona.txt"
+MENTIONED_PERSONA_PATH = "persona/mentioned-persona.txt"
 
 # Function to interact with the LLM
 async def ask_llm(prompt: str):
@@ -19,6 +21,7 @@ async def ask_llm(prompt: str):
         "stream": False
     }
 
+    # Make the HTTP request to the LLM server
     async with aiohttp.ClientSession() as session:
         async with session.post(OLLAMA_URL, json=payload) as resp:
             data = await resp.json()
@@ -28,45 +31,52 @@ async def ask_llm(prompt: str):
 @client.event
 async def on_ready():
     print(f"Logged in as {client.user}")
-    print(f"Using Model: {MODEL} and Persona: {PERSONA_PATH}")
+    print(f"Using Model: {MODEL} and Persona: {GENERAL_PERSONA_PATH}")
 
 # Respond to messages
 @client.event
 async def on_message(message):
-    if message.author.display_name == "Jay":
+
+    print(f'Message received in {message.channel.name} by {message.author.display_name}:')
+    print(message.content)
+
+    # Determine the prompt based on the message context
+    if message.author.display_name == "Jay": # Do not respond to self
         return
-    
-    print(f"Received message from {message.author.display_name}: {message.content}")
+    elif "minecraft" in message.channel.name.lower(): # Alternate prompt for Minecraft channel
+        history = await get_message_history(message.channel, limit=10)
+        prompt = minecraft_prompt(history)
+    elif "jay" in message.content.lower(): # Alternate prompt if mentioned
+        history = await get_message_history(message.channel, limit=10)
+        prompt = mentioned_prompt(history)
+    else: # Default prompt for all other messages
+        history = await get_message_history(message.channel, limit=10)
+        prompt = general_prompt(history)
 
-    # get message history for context
-    history = await get_message_history(message.channel, limit=10)
-
-    prompt = create_prompt(history)
-
-    print(f"Generated Prompt:\n{prompt}")
-
-    # Only send the typing indicator if the bot is mentioned, otherwise just respond
-    if "jay" in message.content.lower():
-        async with message.channel.typing():   # <── typing indicator
-            reply = await ask_llm(prompt)
-    else:
+    if prompt:
         reply = await ask_llm(prompt)
 
     # Handle special commands
     if "$NO_COMMENT" in reply or "NO_COMMENT" in reply:
         print(reply)
         return
-    elif "$THUMBS_UP" in reply:
+    elif "$THUMBS_UP" in reply or "THUMBS_UP" in reply:
         print("Reacted with 👍")
         await message.add_reaction("👍")
-    elif "$THUMBS_DOWN" in reply:
+    elif "$THUMBS_DOWN" in reply or "THUMBS_DOWN" in reply:
         print("Reacted with 👎")
         await message.add_reaction("👎")
+    elif "$HEART" in reply or "HEART" in reply:
+        print("Reacted with ❤️")
+        await message.add_reaction("❤️")
     else:
         print(f"Responded with: {reply}")
         await message.channel.send(reply)
 
+    print()
+
 # Load last 10 messages for context
+# TODO: Load messasges from the Minecraft server differently
 async def get_message_history(channel, limit=10):
     messages = []
     async for msg in channel.history(limit=limit):
@@ -78,9 +88,23 @@ async def get_message_history(channel, limit=10):
     messages.reverse()  # Oldest first
     return '\n'.join(messages)
 
-# Create the prompt for the LLM
-def create_prompt(history):
-    with open(PERSONA_PATH, "r") as F:
+# Create the Minecraft server prompt
+def minecraft_prompt(history):
+    with open(MINECRAFT_PERSONA_PATH, "r") as F:
+        persona = F.read()
+    prompt = f"{persona}\n{history}\nJay:"
+    return prompt
+
+# Create the mentioned prompt
+def mentioned_prompt(history):
+    with open(MENTIONED_PERSONA_PATH, "r") as F:
+        persona = F.read()
+    prompt = f"{persona}\n{history}\nJay:"
+    return prompt
+
+# Create the general purpose prompt
+def general_prompt(history):
+    with open(GENERAL_PERSONA_PATH, "r") as F:
         persona = F.read()
     prompt = f"{persona}\n{history}\nJay:"
     return prompt
