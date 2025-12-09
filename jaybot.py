@@ -37,9 +37,6 @@ async def on_ready():
 @client.event
 async def on_message(message):
 
-    print(f'Message received in {message.channel.name} by {message.author.display_name}:')
-    print(message.content)
-
     # Determine the prompt based on the message context
     if message.author.display_name == "Jay": # Do not respond to self
         return
@@ -56,7 +53,7 @@ async def on_message(message):
     if prompt:
         reply = await ask_llm(prompt)
 
-    # Handle special commands
+    # Handle special commands for reactions or declining to comment
     if "$NO_COMMENT" in reply or "NO_COMMENT" in reply:
         print(reply)
         return
@@ -75,17 +72,25 @@ async def on_message(message):
 
     print()
 
-# Load last 10 messages for context
-# TODO: Load messasges from the Minecraft server differently
+# Load last 10 messages from the Minecraft channel for context
 async def get_message_history(channel, limit=10):
     messages = []
     async for msg in channel.history(limit=limit):
-        if msg.embeds:
+        if msg.embeds: # Handle embedded messages (Minecraft death messages)
             for embed in msg.embeds:
-                messages.append(f"{msg.author.display_name}: {embed.author.name}")
-        else:
+                messages.append(embed.author.name)
+        elif "minecraft-bridge" in msg.author.display_name.lower(): # Special handling for minecraft-bridge messages
+            content = msg.content
+            if "»" in content: # Split username and message
+                content = content.split(" » ", 1)
+                messages.append(f"{content[0]}: {content[1]}")
+            else: # Server status messages, etc.
+                messages.append(content)
+        else: # Regular messages
             messages.append(f"{msg.author.display_name}: {msg.content}")
+
     messages.reverse()  # Oldest first
+    print(f"Loaded message history for context:\n{'\n'.join(messages)}\n")
     return '\n'.join(messages)
 
 # Create the Minecraft server prompt
