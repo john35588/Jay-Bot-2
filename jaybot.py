@@ -90,7 +90,7 @@ async def get_message_history(channel, limit=10):
             messages.append(f"{msg.author.display_name}: {msg.content}")
 
     messages.reverse()  # Oldest first
-    print(f"Loaded message history for context:\n{'\n'.join(messages)}\n")
+    print(f"Loaded message history for context:\n{chr(10).join(messages)}\n")
     return '\n'.join(messages)
 
 # Create the Minecraft server prompt
