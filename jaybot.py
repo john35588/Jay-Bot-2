@@ -8,7 +8,7 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 OLLAMA_URL = os.getenv("OLLAMA_URL")
-MODEL = "llama3.2:latest"
+MODEL = "gemma3:latest"
 GENERAL_PERSONA_PATH = "persona/new-persona.txt"
 MINECRAFT_PERSONA_PATH = "persona/minecraft-persona.txt"
 MENTIONED_PERSONA_PATH = "persona/mentioned-persona.txt"
