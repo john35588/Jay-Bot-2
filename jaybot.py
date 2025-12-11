@@ -9,7 +9,7 @@ client = discord.Client(intents=intents)
 
 OLLAMA_URL = os.getenv("OLLAMA_URL")
 MODEL = "gemma3:latest"
-GENERAL_PERSONA_PATH = "persona/new-persona.txt"
+GENERAL_PERSONA_PATH = "persona/jay-persona.txt"
 MINECRAFT_PERSONA_PATH = "persona/minecraft-persona.txt"
 MENTIONED_PERSONA_PATH = "persona/mentioned-persona.txt"
 
@@ -20,6 +20,8 @@ async def ask_llm(prompt: str):
         "prompt": prompt,
         "stream": False
     }
+
+    print(f"Sending prompt to LLM:\n{prompt}\n")
 
     # Make the HTTP request to the LLM server
     async with aiohttp.ClientSession() as session:
@@ -55,7 +57,7 @@ async def on_message(message):
 
     # Handle special commands for reactions or declining to comment
     if "$NO_COMMENT" in reply or "NO_COMMENT" in reply:
-        print(reply)
+        print("Declined to comment.")
         return
     elif "$THUMBS_UP" in reply or "THUMBS_UP" in reply:
         print("Reacted with 👍")
@@ -76,7 +78,7 @@ async def on_message(message):
 async def get_message_history(channel, limit=10):
     messages = []
     async for msg in channel.history(limit=limit):
-        if msg.embeds: # Handle embedded messages (Minecraft death messages)
+        if "minecraft-bridge" in msg.author.display_name.lower() and msg.embeds: # Handle embedded messages (Minecraft death messages)
             for embed in msg.embeds:
                 messages.append(embed.author.name)
         elif "minecraft-bridge" in msg.author.display_name.lower(): # Special handling for minecraft-bridge messages
@@ -88,6 +90,8 @@ async def get_message_history(channel, limit=10):
                 messages.append(content)
         else: # Regular messages
             messages.append(f"{msg.author.display_name}: {msg.content}")
+        
+    # print(messages)
 
     messages.reverse()  # Oldest first
     print(f"Loaded message history for context:\n{chr(10).join(messages)}\n")
@@ -97,21 +101,21 @@ async def get_message_history(channel, limit=10):
 def minecraft_prompt(history):
     with open(MINECRAFT_PERSONA_PATH, "r") as F:
         persona = F.read()
-    prompt = f"{persona}\n{history}\nJay:"
+    prompt = f"{persona}\n{history}\n"
     return prompt
 
 # Create the mentioned prompt
 def mentioned_prompt(history):
     with open(MENTIONED_PERSONA_PATH, "r") as F:
         persona = F.read()
-    prompt = f"{persona}\n{history}\nJay:"
+    prompt = f"{persona}\n{history}\n"
     return prompt
 
 # Create the general purpose prompt
 def general_prompt(history):
     with open(GENERAL_PERSONA_PATH, "r") as F:
         persona = F.read()
-    prompt = f"{persona}\n{history}\nJay:"
+    prompt = f"{persona}\n{history}\n"
     return prompt
 
 # Start the bot
