@@ -51,6 +51,7 @@ async def on_message(message):
         prompt = mentioned_prompt(history)
     else: # Default prompt for all other messages
         print("Say nothing.")
+        return
         #history = await get_message_history(message.channel, limit=10)
         #prompt = general_prompt(history)
 
