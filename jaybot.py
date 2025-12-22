@@ -2,6 +2,7 @@ import discord
 import os
 import aiohttp
 import asyncio
+import random
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -42,15 +43,16 @@ async def on_message(message):
     # Determine the prompt based on the message context
     if message.author.display_name == "Jay": # Do not respond to self
         return
-    elif "minecraft" in message.channel.name.lower(): # Alternate prompt for Minecraft channel
+    elif "minecraft" in message.channel.name.lower() and "jay" in message.content.lower(): # Alternate prompt for Minecraft channel
         history = await get_message_history(message.channel, limit=10)
         prompt = minecraft_prompt(history)
     elif "jay" in message.content.lower(): # Alternate prompt if mentioned
         history = await get_message_history(message.channel, limit=10)
         prompt = mentioned_prompt(history)
     else: # Default prompt for all other messages
-        history = await get_message_history(message.channel, limit=10)
-        prompt = general_prompt(history)
+        print("Say nothing.")
+        #history = await get_message_history(message.channel, limit=10)
+        #prompt = general_prompt(history)
 
     if prompt:
         reply = await ask_llm(prompt)
