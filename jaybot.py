@@ -21,6 +21,7 @@ async def ask_llm(prompt: str):
         "prompt": prompt,
         "stream": False
     }
+    print(f"Payload: {payload}")
 
     print(f"Sending prompt to LLM:\n{prompt}\n")
 
