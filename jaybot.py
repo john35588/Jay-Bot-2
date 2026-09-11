@@ -19,7 +19,7 @@ DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 async def ask_llm(prompt: str):
     payload = {
         "model": MODEL,
-        "prompt": prompt,
+        "messages": [{"role": "user", "content": prompt}],
         "stream": False,
         "think": False
     }
@@ -30,7 +30,7 @@ async def ask_llm(prompt: str):
     async with aiohttp.ClientSession() as session:
         async with session.post(OLLAMA_URL, json=payload) as resp:
             data = await resp.json()
-            return data["response"]
+            return data["message"]["content"]
 
 # Bot is ready
 @client.event
