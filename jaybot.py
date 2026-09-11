@@ -12,7 +12,7 @@ OLLAMA_URL = os.getenv("OLLAMA_URL")
 MODEL = os.getenv("OLLAMA_MODEL")
 GENERAL_PERSONA_PATH = "persona/jay-persona.txt"
 MINECRAFT_PERSONA_PATH = "persona/minecraft-persona.txt"
-MENTIONED_PERSONA_PATH = "persona/mentioned-persona.txt"
+MENTIONED_PERSONA_PATH = "persona/jay-persona.txt"
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 # Function to interact with the LLM
