@@ -62,10 +62,7 @@ async def on_message(message):
         reply = await ask_llm(prompt)
 
     # Handle special commands for reactions or declining to comment
-    if "$NO_COMMENT" in reply:
-        print("Declined to comment.")
-        return
-    elif "$THUMBS_UP" in reply:
+    if "$THUMBS_UP" in reply:
         print("Reacted with 👍")
         await message.add_reaction("👍")
         await message.channel.send(reply.replace("$THUMBS_UP", ""))
