@@ -13,6 +13,7 @@ MODEL = os.getenv("OLLAMA_MODEL")
 GENERAL_PERSONA_PATH = "persona/jay-persona.txt"
 MINECRAFT_PERSONA_PATH = "persona/minecraft-persona.txt"
 MENTIONED_PERSONA_PATH = "persona/mentioned-persona.txt"
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 # Function to interact with the LLM
 async def ask_llm(prompt: str):
@@ -21,9 +22,8 @@ async def ask_llm(prompt: str):
         "prompt": prompt,
         "stream": False
     }
-    print(f"Payload: {payload}")
-
-    print(f"Sending prompt to LLM:\n{prompt}\n")
+    if DEBUG:
+        print(f"Payload: {payload}")
 
     # Make the HTTP request to the LLM server
     async with aiohttp.ClientSession() as session:
@@ -34,8 +34,9 @@ async def ask_llm(prompt: str):
 # Bot is ready
 @client.event
 async def on_ready():
-    print(f"Logged in as {client.user}")
-    print(f"Using Model: {MODEL} and Persona: {GENERAL_PERSONA_PATH}")
+    if DEBUG:
+        print(f"Logged in as {client.user}")
+        print(f"Using Model: {MODEL} and Persona: {GENERAL_PERSONA_PATH}")
 
 # Respond to messages
 @client.event
@@ -98,7 +99,8 @@ async def get_message_history(channel, limit=10):
     # print(messages)
 
     messages.reverse()  # Oldest first
-    print(f"Loaded message history for context:\n{chr(10).join(messages)}\n")
+    if DEBUG:
+        print(f"Loaded message history for context:\n{chr(10).join(messages)}\n")
     return '\n'.join(messages)
 
 # Create the Minecraft server prompt
