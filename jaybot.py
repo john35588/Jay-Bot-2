@@ -20,7 +20,8 @@ async def ask_llm(prompt: str):
     payload = {
         "model": MODEL,
         "prompt": prompt,
-        "stream": False
+        "stream": False,
+        "think": False
     }
     if DEBUG:
         print(f"Payload: {payload}")
@@ -99,8 +100,9 @@ async def get_message_history(channel, limit=10):
     # print(messages)
 
     messages.reverse()  # Oldest first
-    if DEBUG:
-        print(f"Loaded message history for context:\n{chr(10).join(messages)}\n")
+    #if DEBUG:
+        #print(f"Loaded message history for context:\n{chr(10).join(messages)}\n")
+
     return '\n'.join(messages)
 
 # Create the Minecraft server prompt
