@@ -62,18 +62,21 @@ async def on_message(message):
         reply = await ask_llm(prompt)
 
     # Handle special commands for reactions or declining to comment
-    if "$NO_COMMENT" in reply or "NO_COMMENT" in reply:
+    if "$NO_COMMENT" in reply:
         print("Declined to comment.")
         return
-    elif "$THUMBS_UP" in reply or "THUMBS_UP" in reply:
+    elif "$THUMBS_UP" in reply:
         print("Reacted with 👍")
         await message.add_reaction("👍")
-    elif "$THUMBS_DOWN" in reply or "THUMBS_DOWN" in reply:
+        await message.channel.send(reply.replace("$THUMBS_UP", ""))
+    elif "$THUMBS_DOWN" in reply:
         print("Reacted with 👎")
         await message.add_reaction("👎")
-    elif "$HEART" in reply or "HEART" in reply:
+        await message.channel.send(reply.replace("$THUMBS_DOWN", ""))
+    elif "$HEART" in reply:
         print("Reacted with ❤️")
         await message.add_reaction("❤️")
+        await message.channel.send(reply.replace("$HEART", ""))
     else:
         print(f"Responded with: {reply}")
         await message.channel.send(reply)
